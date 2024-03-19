@@ -87,7 +87,7 @@ sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-yay -S visual-studio-code-bin gimp rawtherapee darktable libreoffice-fresh gedit vlc telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gvfs-smb gvfs-mtp libmtp android-udev android-tools google-chrome skype spotify discord neofetch
+yay -S visual-studio-code-bin gimp rawtherapee obs-studio-amf darktable libreoffice-fresh gedit vlc telegram-desktop gpart mtools f2fs-tools ntfs-3g exfatprogs udftools jdk-openjdk gvfs-smb gvfs-mtp libmtp android-udev android-tools google-chrome skype spotify discord neofetch
 
 # Nuke GnuPG
 sudo rm -fr /etc/pacman.d/gnupg
