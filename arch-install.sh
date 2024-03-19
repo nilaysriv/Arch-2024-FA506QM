@@ -98,7 +98,7 @@ sudo pacman -Syu
 fstrim -v /
 
 #Laptop-Specific-Optimization
-yay -S lm_sensors zenmonitor zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu
+yay -S lm_sensors zenmonitor zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer
 yay -S asusctl supergfxctl rog-control-center linux-g14 linux-g14-headers
 
 nano /efi/loader/entries/arch.conf
