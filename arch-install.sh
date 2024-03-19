@@ -15,7 +15,7 @@ swapon /dev/nvme0n1p2
 #Network Setup
 iwctl
 station wlan0 connect Network_5G
-7004371457
+*password*
 exit
 #Mounting Drives
 mount /dev/nvme0n1p3 /mnt
@@ -59,10 +59,10 @@ arch-chroot /mnt
         Include = /etc/pacman.d/mirrorlist
     pacman -Syu
     
-    passwd 700437
+    passwd *password*
     useradd -mG wheel,uucp -s /bin/bash nilay
     passwd nilay
-    7004371457
+    *password*
 
     EDITOR=nano visudo
         wheel ALL=(ALL) ALL
