@@ -5,9 +5,9 @@ z
 y
 y
 cfdisk /dev/nvme0n1
-#512M EFI
-#16G SWAP
-#Rest for /mnt
+    #512M EFI
+    #16G SWAP
+    #Rest for /mnt
 mkfs.ext4 /dev/nvme0n1p3
 mffs.vfat -F32 /dev/nvme0n1p1
 mkswap /dev/nvme0n1p2
@@ -22,8 +22,11 @@ mount /dev/nvme0n1p3 /mnt
 mkdir -p /mnt/EFI
 #Installation
 pacstrap /mnt base base-devel linux linux-headers linux-firmware amd-ucode git nano efibootmgr os-prober usbutils inetutils wpa_supplicant
+#FSTAB generation
 genfstab -pU /mnt >> /mnt/etc/fstab
+#chrooting into installation
 arch-chroot /mnt
+#bootloader
     bootctl install
     nano /efi/loader/loader.conf
         default  arch.conf
@@ -45,20 +48,20 @@ arch-chroot /mnt
     nano /etc/locale.conf
         en_US.UTF-8
         en_IN.UTF-8
-
+#language and timezone setup
     locale-gen
     echo LANG=en_IN.UTF-8 > /etc/locale.conf
     export LANG=en_IN.UTF-8
     timedatectl set-timezone Asia/Kolkata
     hwclock --systohc
-
+#Hostname
     echo WompWompNigga > /etc/hostname
-
+#pacman configuration
     nano /etc/pacman.conf
         [multilib]
         Include = /etc/pacman.d/mirrorlist
     pacman -Syu
-    
+   #User Setup 
     passwd *password*
     useradd -mG wheel,uucp -s /bin/bash nilay
     passwd nilay
@@ -66,9 +69,8 @@ arch-chroot /mnt
 
     EDITOR=nano visudo
         wheel ALL=(ALL) ALL
-
+#DE installation
     pacman -S xorg-server plasma-meta dolphin firefox kate kdenlive dolphin-plugins ark baloo-widgets ffmpegthumbs kde-connect-kde kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kio-extras kio-fuse kio-gdrive libappindicator-gtk3 xwaylandvideobridge noto-sans noto-color-emoji maliit-keyboard power-profiles-daemon switcheroo-control xdg-desktop-portal-gtk xsettingsd orca ark elisa filelight gwenview k3b kalk kamera kamoso kbackup kcalc kdf kfind kget kmail knotes kompare konsole krecorder okular partitionmanager spectacle yakuake xorg-xrandr discover packagekit-qt5 neofetch networkmanager gufw bluez bluez-utils pulseaudio-bluetooth ttf-dejavu ttf-opensans ttf-liberation ntfs-3g 
-
     systemctl enable fstrim.timer
     systemctl enable sddm
     systemctl enable NetworkManager
@@ -97,7 +99,7 @@ sudo pacman -Syu
 #Trim
 fstrim -v /
 
-#Laptop-Specific-Optimization
+#Laptop-Specific-Optimization [Ryzen Drivers, Raedon Drivers and AC alternative]
 yay -S lm_sensors zenmonitor zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer
 yay -S asusctl supergfxctl rog-control-center linux-g14 linux-g14-headers
 
@@ -108,7 +110,7 @@ nano /efi/loader/entries/arch.conf
     options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw
 sudo pacman -S nvidia-dkms nvidia-utils lib32-nvidia-utils vulkan-icd-loader nvidia-settings
 
-#Gaming
+#Gaming Packages
 yay -S lutris steam wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader mangohud-git lib32-mangohud-git goverlay-bin
 
 
