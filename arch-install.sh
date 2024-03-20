@@ -1,3 +1,4 @@
+#!/bin/bash
 #Disk Partitioning and partition Mounting
 gdisk /dev/nvme0n1
 x
