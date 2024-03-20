@@ -27,33 +27,17 @@ genfstab -pU /mnt >> /mnt/etc/fstab
 #chrooting into installation
 arch-chroot /mnt
 #bootloader
-    bootctl install
-    nano /efi/loader/loader.conf
-        default  arch.conf
-        timeout  0
-        console-mode max
-        editor   no
-
-    nano /efi/loader/entries/arch.conf
-        title   Arch Linux (fallback initramfs)
-        linux   /vmlinuz-linux
-        initrd  /initramfs-linux-fallback.img
-        options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw
-    nano /efi/loader/entries/arch-fallback.conf
-        title   Arch Linux (fallback initramfs)
-        linux   /vmlinuz-linux
-        initrd  /initramfs-linux-fallback.img
-        options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw
-
+    pacman -S grub
+    grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB_Arch_Linux
+    grub-mkconfig -o /boot/grub/grub.cfg
+#Set Locale [En-IN.UTF-8]
     nano /etc/locale.conf
         en_US.UTF-8
         en_IN.UTF-8
-#language and timezone setup
+#language setup
     locale-gen
     echo LANG=en_IN.UTF-8 > /etc/locale.conf
     export LANG=en_IN.UTF-8
-    timedatectl set-timezone Asia/Kolkata
-    hwclock --systohc
 #Hostname
     echo WompWompNigga > /etc/hostname
 #pacman configuration
@@ -70,7 +54,7 @@ arch-chroot /mnt
     EDITOR=nano visudo
         wheel ALL=(ALL) ALL
 #DE installation
-    pacman -S xorg-server plasma-meta dolphin firefox kate kdenlive dolphin-plugins ark baloo-widgets ffmpegthumbs kde-connect-kde kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kio-extras kio-fuse kio-gdrive libappindicator-gtk3 xwaylandvideobridge noto-sans noto-color-emoji maliit-keyboard power-profiles-daemon switcheroo-control xdg-desktop-portal-gtk xsettingsd orca ark elisa filelight gwenview k3b kalk kamera kamoso kbackup kcalc kdf kfind kget kmail knotes kompare konsole krecorder okular partitionmanager spectacle yakuake xorg-xrandr discover packagekit-qt5 neofetch networkmanager gufw bluez bluez-utils pulseaudio-bluetooth ttf-dejavu ttf-opensans ttf-liberation ntfs-3g 
+    pacman -S xorg-server plasma-meta dolphin firefox kate kdenlive dolphin-plugins ark baloo-widgets ffmpegthumbs kde-connect-kde kdegraphics-thumbnailers kdenetwork-filesharing kio-admin kio-extras kio-fuse kio-gdrive libappindicator-gtk3 xwaylandvideobridge noto-fonts noto-fonts-extra noto-color-emoji maliit-keyboard power-profiles-daemon switcheroo-control xdg-desktop-portal-gtk xsettingsd orca ark elisa filelight gwenview k3b kalk kamera kamoso kbackup kcalc kdf kfind kget kmail knotes kompare konsole krecorder okular partitionmanager spectacle yakuake xorg-xrandr discover packagekit-qt5 neofetch networkmanager gufw bluez bluez-utils pulseaudio-bluetooth ttf-dejavu ttf-opensans ttf-liberation ntfs-3g archlinux-wallpaper
     systemctl enable fstrim.timer
     systemctl enable sddm
     systemctl enable NetworkManager
@@ -82,7 +66,11 @@ arch-chroot /mnt
 #Post-Installation
 sudo gedit /etc/sysctl.d/99-swappiness.conf
     vm.swappiness=10
+#Timezone    
+timedatectl set-timezone Asia/Kolkata
+timedatectl set-local-rtc 1 --adjust-system-clock
 
+#AUR Package Installer
 sudo pacman -S git
 git clone https://aur.archlinux.org/yay.git
 cd yay
@@ -100,15 +88,15 @@ sudo pacman -Syu
 fstrim -v /
 
 #Laptop-Specific-Optimization [Ryzen Drivers, Raedon Drivers and AC alternative]
-yay -S lm_sensors zenmonitor zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer
-yay -S asusctl supergfxctl rog-control-center linux-g14 linux-g14-headers
-
-nano /efi/loader/entries/arch.conf
-    title   Arch Linux
-    linux   /vmlinuz-linux-g14
-    initrd  /initramfs-linux-g14.img
-    options root=UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx rw
-sudo pacman -S nvidia-dkms nvidia-utils lib32-nvidia-utils vulkan-icd-loader nvidia-settings
+yay -S lm_sensors zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer
+nano /etc/pacman.conf
+    [g14]
+    SigLevel = Optional TrustAll
+    Server = https://arch.asus-linux.org
+    
+sudo pacman -S asusctl supergfxctl rog-control-center linux-g14 linux-g14-headers
+sudo pacman -S nvidia-dkms nvidia-utils lib32-nvidia-utils vulkan-icd-loader nvidia-settings nvidia-prime
+sudo ryzencontroller --no-sandbox
 
 #Gaming Packages
 yay -S lutris steam wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader mangohud-git lib32-mangohud-git goverlay-bin
