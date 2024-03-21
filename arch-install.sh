@@ -88,19 +88,45 @@ sudo pacman -Syu
 #Trim
 fstrim -v /
 
+#Kernel
+mkdir -p linux-g14 
+cd linux-g14
+git clone https://aur.archlinux.org/linux-g14.git
+sudo gpg2 --locate-keys torvalds@kernel.org
+makepkg
+pacman -U linux-g14
+
+#Kernel Headers
+mkdir -p linux-g14-headers
+cd linux-g14-headers
+git clone https://aur.archlinux.org/linux-g14.git
+sudo gpg2 --locate-keys torvalds@kernel.org
+makepkg
+pacman -U linux-g14-headers
+
+
 #Laptop-Specific-Optimization [Ryzen Drivers, Raedon Drivers and AC alternative]
-yay -S lm_sensors zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer
+yay -S lm_sensors zenpower3-dkms zenmonitor3-git ryzenadj-git ryzen-controller-bin ryzen_smu amdgpu-pro-installer plasma6-applets-supergfxctl
 nano /etc/pacman.conf
     [g14]
     SigLevel = Optional TrustAll
     Server = https://arch.asus-linux.org
     
-sudo pacman -S asusctl supergfxctl rog-control-center linux-g14 linux-g14-headers
+sudo pacman -S asusctl supergfxctl rog-control-center
 sudo pacman -S nvidia-dkms nvidia-utils lib32-nvidia-utils vulkan-icd-loader nvidia-settings nvidia-prime
 sudo ryzencontroller --no-sandbox
+sudo systemctl enable --now supergfxd.service
+
+
+#GUI for pacman/AUR Packages
+yay -S pamac-all polkit flatpak flatseal
+flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 #Gaming Packages
 yay -S lutris steam wine-staging giflib lib32-giflib libpng lib32-libpng libldap lib32-libldap gnutls lib32-gnutls mpg123 lib32-mpg123 openal lib32-openal v4l-utils lib32-v4l-utils libpulse lib32-libpulse libgpg-error lib32-libgpg-error alsa-plugins lib32-alsa-plugins alsa-lib lib32-alsa-lib libjpeg-turbo lib32-libjpeg-turbo sqlite lib32-sqlite libxcomposite lib32-libxcomposite libxinerama lib32-libgcrypt libgcrypt lib32-libxinerama ncurses lib32-ncurses opencl-icd-loader lib32-opencl-icd-loader libxslt lib32-libxslt libva lib32-libva gtk3 lib32-gtk3 gst-plugins-base-libs lib32-gst-plugins-base-libs vulkan-icd-loader lib32-vulkan-icd-loader mangohud-git lib32-mangohud-git goverlay-bin
+
+#System Updates and AUR Kernel Updates
+yay -Syyu
 
 
 
