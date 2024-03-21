@@ -1,4 +1,8 @@
 #!/bin/bash
+#SSH into installation from other device
+passwd
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@archiso.local
+
 #Disk Partitioning and partition Mounting
 gdisk /dev/nvme0n1
 x
